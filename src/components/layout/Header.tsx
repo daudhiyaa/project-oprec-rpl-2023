@@ -64,14 +64,7 @@ export default function Header() {
               <NavbarList title="Home" href="/" />
               <NavbarList title="Projects" href="/projects" />
               <NavbarList title="Experiences" href="/experiences" />
-              <li>
-                <Link
-                  className="hover:underline underline-offset-4"
-                  href="/#playground"
-                >
-                  Playground
-                </Link>
-              </li>
+              <NavbarList title="Playground" href="/#playground" />
             </ul>
           </div>
         </div>

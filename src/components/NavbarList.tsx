@@ -10,10 +10,8 @@ export default function NavbarList(props: NavbarListProps) {
     <li>
       <Link
         className="hover:underline underline-offset-4"
-        href={{
-          pathname: props.href,
-          // pathname: `/${props.title.toLowerCase()}`,
-        }}
+        // href={{ pathname: props.href }}
+        href={`${props.href}`}
       >
         {props.title}
       </Link>
