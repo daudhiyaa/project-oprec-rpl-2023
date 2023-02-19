@@ -14,7 +14,7 @@ export default function UserNamePage() {
         <title>{name} Page | FE RPL</title>
         <meta name="description" content="Website Penugasan FE RPL" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo-title.png" />
       </Head>
       <section className="bg-gray-900 min-h-screen flex flex-col justify-center items-center font-poppins">
         <span className="text-[5vw] md:text-[50px] flex ">

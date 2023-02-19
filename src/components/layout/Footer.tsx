@@ -33,7 +33,7 @@ export default function Footer() {
       <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
         © {""}
         <Link href="https://flowbite.com/" className="hover:underline">
-          Daud Dhiya Rozaan
+          Daud Dhiya&apos; Rozaan
         </Link>{" "}
         - 2023
       </span>
