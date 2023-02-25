@@ -1,20 +1,23 @@
 import Link from "next/link";
 import { useState } from "react";
-import NavbarList from "../NavbarList";
+import NavbarList from "../link/NavbarList";
 
 export default function Header() {
   const [navbar, setNavbar] = useState(false);
 
   return (
-    <nav className="w-full fixed backdrop-blur">
-      <div className="justify-between px-12 md:px-24 md:items-center md:flex">
+    <nav
+      className={`w-[95%] left-[2.5%] mt-6 rounded-[4rem] shadow-xl shado-[0px_0px_30px_0px_rgba(0,0,0,0.3)] fixed backdrop-blur`}
+    >
+      <div className="justify-between px-12 md:px-14 md:items-center md:flex">
         <div>
           <div className="flex items-center justify-between py-3 md:py-5 md:block">
             <Link href="#">
-              <h2 className="text-2xl font-poppins text-white font-bold">
+              <h2 className="text-2xl font-poppins dark:text-white text-lightParagraph font-bold">
                 daudhiyaa
               </h2>
             </Link>
+
             <div className="md:hidden">
               <button
                 className="p-2 text-gray-700 rounded-md outline-none focus:border-gray-400 focus:border"
@@ -23,7 +26,7 @@ export default function Header() {
                 {navbar ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6 text-white"
+                    className="w-6 h-6 dark:text-white text-darkText"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -36,7 +39,7 @@ export default function Header() {
                 ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6 text-white"
+                    className="w-6 h-6 dark:text-white text-darkText"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -56,15 +59,15 @@ export default function Header() {
 
         <div>
           <div
-            className={`flex-1 justify-self-center pb-3 mt-8 md:block md:pb-0 md:mt-0 ${
+            className={`flex-1 justify-self-center pb-6 md:block md:pb-0 md:mt-0 ${
               navbar ? "block" : "hidden"
             }`}
           >
-            <ul className="items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0 font-poppins text-white">
+            <ul className="md:items-center justify-center flex flex-col space-y-4 md:flex-row md:space-x-6 md:space-y-0 font-poppins text-white">
               <NavbarList title="Home" href="/" />
               <NavbarList title="Projects" href="/projects" />
               <NavbarList title="Experiences" href="/experiences" />
-              <NavbarList title="Playground" href="/#playground" />
+              <NavbarList title="Login" href="/login" />
             </ul>
           </div>
         </div>
