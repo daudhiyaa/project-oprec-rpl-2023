@@ -1,12 +1,19 @@
-import Layout from "@/components/layout/Layout";
 import Link from "next/link";
+import Image from "next/image";
+
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { FileUploader } from "react-drag-drop-files";
+
 import Eye from "public/eye.svg";
 import EyeSlash from "public/eye-slash.svg";
 import Calendar from "public/calendar.svg";
-import Image from "next/image";
+import X from "public/x.svg";
+import UploadImage from "public/image-upload.svg";
+
+import Layout from "@/components/layout/Layout";
+import Input from "@/components/input/Input";
+import DivSubmittedData from "@/components/skeletons/DivSubmittedData";
 
 type FormValues = {
   name: string;
@@ -15,14 +22,12 @@ type FormValues = {
   dateBirth: string;
   password: string;
   gender: string;
-  isAdmin: boolean;
-  // uploadedImage: typeof Image;
   uploadedImage: FileList | null;
+  // uploadedImage: typeof Image;
 };
 
-const fileTypes = ["JPG", "PNG", "JPEG", "GIF"];
-
 export default function Login() {
+  const fileTypes = ["JPG", "PNG", "JPEG", "GIF"];
   const [username, setUsername] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
   const [showDiv, setShowDiv] = useState(false);
@@ -35,11 +40,9 @@ export default function Login() {
   const [submittedGender, setSubmittedGender] = useState("");
   const [submittedFile, setSubmittedFile] = useState("");
 
-  const [file, setFile] = useState(null);
-  const handleChange = (file: any) => {
-    setFile(file);
-    console.log(file);
-  };
+  const methods = useForm<FormValues>({
+    mode: "onChange",
+  });
 
   const {
     register,
@@ -47,41 +50,14 @@ export default function Login() {
     reset,
     formState,
     formState: { errors },
-  } = useForm<FormValues>({
-    mode: "onChange",
-  });
+  } = methods;
 
-  register("name", {
-    required: {
-      value: true,
-      message: "This is required!",
-    },
-    minLength: {
-      value: 4,
-      message: "Minimal 4",
-    },
-    onChange: (e) => setUsername(e.target.value),
-  });
-
-  register("email", {
-    required: {
-      value: true,
-      message: "This is required!",
-    },
-    pattern: /^\S+@\S+$/i,
-  });
-
-  register("phoneNumber", {
-    required: "This Phone number is required!",
+  register("uploadedImage", {
+    required: "This Image is required!",
   });
 
   register("dateBirth", {
     required: "This Date Birth is required!",
-    // pattern: [0-9]{3}-[0-9]{2}-[0-9]{3},
-  });
-
-  register("uploadedImage", {
-    required: "This Image is required!",
   });
 
   register("password", {
@@ -101,7 +77,6 @@ export default function Login() {
         phoneNumber: 0,
         password: "",
         gender: "",
-        isAdmin: true,
         dateBirth: "",
       });
     }
@@ -111,7 +86,7 @@ export default function Login() {
     <Layout pageTitle="Login">
       <section className="min-h-screen w-full bg-lightBG dark:bg-darkBG text-white flex justify-center items-center font-poppins py-32">
         <div
-          className={`absolute w-[90%] h-full shado-xl shadow-[0px_0px_30px_0px_rgba(0,0,0,0.2)] rounded-[5vw] flex flex-col text-lightText opacity-75 dark:text-white py-7 justify-center items-center z-20 dark:bg-darkBG bg-lightBG ${
+          className={`absolute w-[90%] h-full shado-xl shadow-[0px_0px_30px_0px_rgba(0,0,0,0.2)] rounded-[3vw] flex flex-col text-lightText opacity-75 dark:text-white py-7 items-center z-20 dark:bg-darkBG bg-lightBG ${
             showDiv ? "block" : "hidden"
           }`}
         >
@@ -123,195 +98,196 @@ export default function Login() {
               onClick={() => {
                 setShowDiv(false);
               }}
-              className="px-2 text-2xl duration-200 border-transparent border-2 hover:border-gray-200 rounded-lg"
+              className="p-2 text-2xl duration-200 border-transparent border-2 hover:border-gray-200 rounded-lg"
             >
-              x
+              <Image src={X} alt="" />
             </button>
           </div>
-          <div className="flex flex-col justify-center">
-            <span className="p-2 border-2 rounded-md">{submittedName}</span>
-            <span>{submittedEmail}</span>
-            <span>{submittedPhoneNumber}</span>
-            <span>{submittedDateBirth}</span>
-            <span>{submittedPassword}</span>
-            <span>{submittedGender}</span>
-            <span>{submittedFile}</span>
-            <>{file}</>
-          </div>
+          <DivSubmittedData
+            submittedFile={submittedFile}
+            submittedName={submittedName}
+            submittedEmail={submittedEmail}
+            submittedPhoneNumber={submittedPhoneNumber}
+            submittedDateBirth={submittedDateBirth}
+            submittedPassword={submittedPassword}
+            submittedGender={submittedGender}
+          />
         </div>
 
-        <form
-          onSubmit={handleSubmit((data) => {
-            // setSubmittedData(data);
-            setSubmittedName(data.name);
-            setSubmittedEmail(data.email);
-            setSubmittedPhoneNumber(data.phoneNumber);
-            setSubmittedDateBirth(data.dateBirth);
-            setSubmittedPassword(data.password);
-            setSubmittedGender(data.gender);
-            setSubmittedFile(JSON.stringify(data.uploadedImage));
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit((data) => {
+              setSubmittedName(data.name);
+              setSubmittedEmail(data.email);
+              setSubmittedPhoneNumber(data.phoneNumber);
+              setSubmittedDateBirth(data.dateBirth);
+              setSubmittedPassword(data.password);
+              setSubmittedGender(data.gender);
+              setSubmittedFile(JSON.stringify(data.uploadedImage));
+              // setSubmittedData(data);
 
-            console.log(data.uploadedImage);
-            console.log(JSON.stringify(data.uploadedImage));
-            // console.log(data);
-          })}
-          className={`flex flex-col h-full w-max p-12 rounded-2xl shadow-[0px_10px_20px_5px_rgba(0,0,0,0.1)] items-center ${
-            showDiv ? "blur-sm" : "blur-none"
-          }`}
-        >
-          <div className="flex flex-col justify-center items-start w-full">
-            <h2 className="text-lightText dark:text-white flex justify-center w-full font-semibold text-2xl mb-2">
-              Login
-            </h2>
+              console.log(data.uploadedImage);
+              console.log(JSON.stringify(data.uploadedImage));
+              // console.log(data);
+            })}
+            className={`flex flex-col h-full w-max p-12 rounded-2xl shadow-[0px_10px_20px_5px_rgba(0,0,0,0.1)] items-center ${
+              showDiv ? "blur-sm" : "blur-none"
+            }`}
+          >
+            <div className="flex flex-col justify-center items-start w-full">
+              <h2 className="text-lightText dark:text-white flex justify-center w-full font-semibold text-2xl mb-2">
+                Login
+              </h2>
 
-            {/* <FileUploader
-              handleChange={handleChange}
-              name="file"
-              classes="h-24 z-0 border-white"
-              types={fileTypes}
-              multiple={true}
-              hoverTitle="Ini Hover"
-              // {...register("uploadedImage")}
-            /> */}
-
-            <label className="flex justify-center w-full h-32 px-[4vw] py-4 transition border-2 border-gray-300 border-dashed rounded-xl appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
-              <span className="flex items-center space-x-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
-                <span className="font-medium text-[#B2BEB5] dark:text-darkParagraph">
-                  Drop your photo here, or {""}
-                  <span className="dark:text-darkComponent text-lightText underline">
-                    browse
+              <label className="flex justify-center w-full px-[3vw] py-10 transition border-2 border-gray-300 border-inherit border-dashed rounded-xl appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+                <span className="flex items-center space-x-2">
+                  {/* <Image src={UploadImage} alt="" /> */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      className="fill-gray-400 dark:fill-slate-300"
+                      d="M19,13a1,1,0,0,0-1,1v.38L16.52,12.9a2.79,2.79,0,0,0-3.93,0l-.7.7L9.41,11.12a2.85,2.85,0,0,0-3.93,0L4,12.6V7A1,1,0,0,1,5,6h7a1,1,0,0,0,0-2H5A3,3,0,0,0,2,7V19a3,3,0,0,0,3,3H17a3,3,0,0,0,3-3V14A1,1,0,0,0,19,13ZM5,20a1,1,0,0,1-1-1V15.43l2.9-2.9a.79.79,0,0,1,1.09,0l3.17,3.17,0,0L15.46,20Zm13-1a.89.89,0,0,1-.18.53L13.31,15l.7-.7a.77.77,0,0,1,1.1,0L18,17.21ZM22.71,4.29l-3-3a1,1,0,0,0-.33-.21,1,1,0,0,0-.76,0,1,1,0,0,0-.33.21l-3,3a1,1,0,0,0,1.42,1.42L18,4.41V10a1,1,0,0,0,2,0V4.41l1.29,1.3a1,1,0,0,0,1.42,0A1,1,0,0,0,22.71,4.29Z"
+                    />
+                  </svg>
+                  <span className="font-medium text-[#B2BEB5]">
+                    Drop your photo here, or {""}
+                    <span className="dark:text-darkComponent text-lightText underline">
+                      browse
+                    </span>
                   </span>
                 </span>
-              </span>
-              <input
-                type="file"
-                accept="image/*,.png,.jpg,.jpeg"
-                multiple={true}
-                className="hidden"
-                // name="file_upload"
-                {...register("uploadedImage")}
-              />
-            </label>
-            <p className="text-red-500 text-sm">
-              {errors.uploadedImage?.message}
-            </p>
-          </div>
+                <input
+                  type="file"
+                  accept="image/*,.png,.jpg,.jpeg"
+                  multiple={true}
+                  className="hidden"
+                  // name="file_upload"
+                  {...register("uploadedImage")}
+                />
+              </label>
+              <p className="text-red-500 text-sm">
+                {errors.uploadedImage?.message}
+              </p>
+            </div>
 
-          <div className="flex flex-col gap-y-1 h-max w-full text-lightText dark:text-white">
-            <label htmlFor="name">Name</label>
-            <span className="flex bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
-              <input
-                type="text"
-                {...register("name")}
-                placeholder="Name"
-                className="w-full focus:outline-none bg-transparent"
-              />
-            </span>
-            <p className="text-red-500 text-sm">{errors.name?.message}</p>
-
-            <label htmlFor="email">Email</label>
-            <span className="flex bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
-              <input
-                type="email"
-                {...register("email")}
-                placeholder="Email"
-                className="w-full focus:outline-none bg-transparent"
-              />
-            </span>
-            <p className="text-red-500 text-sm">{errors.email?.message}</p>
-
-            <label htmlFor="tel">Phone Number</label>
-            <span className="flex bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
-              <input
-                type="number"
-                {...register("phoneNumber")}
-                placeholder="Phone Number"
-                className="w-full focus:outline-none bg-transparent"
-              />
-            </span>
-            <p className="text-red-500 text-sm">
-              {errors.phoneNumber?.message}
-            </p>
-
-            <label htmlFor="dateBirth">Date Birth</label>
-            <span className="flex bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
-              <input
-                type="date"
-                {...register("dateBirth")}
-                placeholder="Date Birth"
-                className="w-full focus:outline-none bg-transparent"
-              />
-              <Image
-                src={Calendar}
-                className="cursor-pointer scale-[0.85] -z-10 absolute right-14"
-                alt=""
-              />
-            </span>
-            <p className="text-red-500 text-sm">{errors.dateBirth?.message}</p>
-
-            <label htmlFor="password">Password</label>
-            <span className="flex bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
-              <input
-                type={passwordShown ? "text" : "password"}
-                {...register("password")}
-                placeholder="Password"
-                className="w-full focus:outline-none bg-transparent"
-              />
-              <Image
-                onClick={() => {
-                  setPasswordShown(!passwordShown);
+            <div className="flex flex-col gap-y-1 h-max w-full text-lightText dark:text-white">
+              <Input
+                id="name"
+                titleLabel="Name"
+                inputType="text"
+                registerType={{
+                  required: "This Name is required!",
+                  minLength: {
+                    value: 4,
+                    message: "Minimal 4",
+                  },
                 }}
-                src={passwordShown ? EyeSlash : Eye}
-                className="cursor-pointer scale-90"
-                alt=""
+                placeholder="Name"
+                errorMessage={errors.name?.message}
               />
-            </span>
-            <p className="text-red-500 text-sm">{errors.password?.message}</p>
 
-            <label htmlFor="Gender">Gender</label>
-            <span className="flex bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
-              <select
-                {...register("gender")}
-                className="w-full focus:outline-none bg-transparent"
-              >
-                <option value="Male" className="dark:bg-darkBG">
-                  Male
-                </option>
-                <option value="Female" className="dark:bg-darkBG">
-                  Female
-                </option>
-              </select>
-            </span>
-            <p className="text-red-500 text-sm">{errors.gender?.message}</p>
+              <Input
+                id="email"
+                titleLabel="Email"
+                inputType="text"
+                registerType={{
+                  required: "This Email is required!",
+                  pattern: {
+                    value: /^\S+@\S+[.]+\S/i,
+                    message: "Email Not Same with pattern",
+                  },
+                }}
+                placeholder="Email"
+                errorMessage={errors.email?.message}
+              />
 
-            <button
-              type="submit"
-              className="rounded-lg cursor-pointer p-2 bg-darkComponent text-darkText duration-200 hover:shadow-md hover:bg-darkComponentHover"
-            >
-              <Link
-                href={`login/${username}`}
-                target="_blank"
-                className="w-full h-full p-2"
+              <Input
+                id="phoneNumber"
+                titleLabel="Phone Number"
+                inputType="tel"
+                registerType={{
+                  required: "This Phone Number is required!",
+                  pattern: {
+                    value: /^[0-9]{4}-[0-9]{4}-[0-9]{4}/i,
+                    message: "Phone Number Not Same with pattern",
+                  },
+                }}
+                placeholder="Phone Number"
+                errorMessage={errors.phoneNumber?.message}
+              />
+
+              <label htmlFor="dateBirth">Date Birth</label>
+              <span className="flex hover:border-gray-400 duration-200 bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
+                <input
+                  type="date"
+                  {...register("dateBirth")}
+                  placeholder="Date Birth"
+                  className="w-full focus:placeholder:opacity-0 focus:outline-none bg-transparent"
+                />
+                <Image
+                  src={Calendar}
+                  className="cursor-pointer scale-[0.85] -z-10 absolute right-14"
+                  alt=""
+                />
+              </span>
+              <p className="text-red-500 text-sm">
+                {errors.dateBirth?.message}
+              </p>
+
+              <label htmlFor="password">Password</label>
+              <span className="flex hover:border-gray-400 duration-200 bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
+                <input
+                  type={passwordShown ? "text" : "password"}
+                  {...register("password")}
+                  placeholder="Password"
+                  className="w-full focus:placeholder:opacity-0 focus:outline-none bg-transparent"
+                />
+                <Image
+                  onClick={() => {
+                    setPasswordShown(!passwordShown);
+                  }}
+                  src={passwordShown ? EyeSlash : Eye}
+                  className="cursor-pointer scale-90"
+                  alt=""
+                />
+              </span>
+              <p className="text-red-500 text-sm">{errors.password?.message}</p>
+
+              <label htmlFor="Gender">Gender</label>
+              <span className="flex hover:border-gray-400 duration-200 bg-transparent rounded-lg border-gray-300 dark:border-white border-[1px] px-2 py-1">
+                <select
+                  {...register("gender")}
+                  className="w-full focus:outline-none bg-transparent"
+                >
+                  <option value="Male" className="dark:bg-darkBG">
+                    Male
+                  </option>
+                  <option value="Female" className="dark:bg-darkBG">
+                    Female
+                  </option>
+                </select>
+              </span>
+              <p className="text-red-500 text-sm">{errors.gender?.message}</p>
+
+              <button
+                type="submit"
+                className="rounded-lg cursor-pointer p-2 bg-darkComponent text-darkText duration-200 hover:shadow-md hover:bg-darkComponentHover"
               >
-                Submit
-              </Link>
-            </button>
-          </div>
-        </form>
+                <Link
+                  href={`login/${username}`}
+                  target="_blank"
+                  className="w-full h-full p-2"
+                >
+                  Submit
+                </Link>
+              </button>
+            </div>
+          </form>
+        </FormProvider>
       </section>
     </Layout>
   );
