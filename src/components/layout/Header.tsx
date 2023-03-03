@@ -1,13 +1,24 @@
 import Link from "next/link";
-import { useState } from "react";
-import NavbarList from "../link/NavbarList";
+import Image from "next/image";
 
-export default function Header() {
+import { SetStateAction, useState } from "react";
+
+import NavbarList from "../link/NavbarList";
+import Moon from "public/moon.svg";
+import Sun from "public/sun.svg";
+
+interface HeaderProps {
+  setDarkToggle: React.Dispatch<SetStateAction<boolean>>;
+  darkToggle: boolean;
+}
+
+export default function Header({ props }: { props: HeaderProps }) {
   const [navbar, setNavbar] = useState(false);
 
   return (
     <nav
-      className={`w-[95%] left-[2.5%] mt-6 rounded-[4rem] shadow-xl shado-[0px_0px_30px_0px_rgba(0,0,0,0.3)] fixed backdrop-blur`}
+      // className={`w-[95%] z-30 left-[2.5%] mt-6 rounded-[4rem] shadow-xl shado-[0px_0px_30px_0px_rgba(0,0,0,0.3)] fixed backdrop-blur`}
+      className={`w-full z-30 fixed backdrop-blur`}
     >
       <div className="justify-between px-12 md:px-14 md:items-center md:flex">
         <div>
@@ -57,7 +68,7 @@ export default function Header() {
           </div>
         </div>
 
-        <div>
+        <div className="flex gap-10">
           <div
             className={`flex-1 justify-self-center pb-6 md:block md:pb-0 md:mt-0 ${
               navbar ? "block" : "hidden"
@@ -70,6 +81,14 @@ export default function Header() {
               <NavbarList title="Login" href="/login" />
             </ul>
           </div>
+          <button
+            onClick={() => props.setDarkToggle(!props.darkToggle)}
+            className={`p-2 duration-300 h-min text-darkText md:flex rounded-md hover:shadow-md hover:bg-darkComponentHover bg-darkComponent ${
+              navbar ? "max-[768px]:flex" : "max-[768px]:hidden"
+            }`}
+          >
+            <Image src={props.darkToggle ? Sun : Moon} alt="" />
+          </button>
         </div>
       </div>
     </nav>
