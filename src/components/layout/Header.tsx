@@ -77,7 +77,7 @@ export default function Header({ props }: { props: HeaderProps }) {
             <ul className="md:items-center justify-center flex flex-col space-y-4 md:flex-row md:space-x-6 md:space-y-0 font-poppins text-white">
               <NavbarList title="Home" href="/" />
               <NavbarList title="Projects" href="/projects" />
-              <NavbarList title="Experiences" href="/experiences" />
+              <NavbarList title="Chess Player" href="/chess" />
               <NavbarList title="Login" href="/login" />
             </ul>
           </div>
