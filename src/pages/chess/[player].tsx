@@ -1,8 +1,10 @@
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+
+import type { NextPage } from "next";
+
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 import { useEffect, useState } from "react";
 
 interface ChessPlayer {

@@ -1,8 +1,10 @@
 import React from "react";
 import Link from "next/link";
+
 import { useInfiniteQuery } from "react-query";
 import { QUERY_KEY, fetchChess } from "../api/chess";
 import type { NextPage } from "next";
+
 import Layout from "@/components/layout/Layout";
 
 const Chess: NextPage = () => {

@@ -1,7 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { FormProvider, useForm } from "react-hook-form";
 import { FileUploader } from "react-drag-drop-files";
 
@@ -9,7 +9,6 @@ import Eye from "public/eye.svg";
 import EyeSlash from "public/eye-slash.svg";
 import Calendar from "public/calendar.svg";
 import X from "public/x.svg";
-import UploadImage from "public/image-upload.svg";
 
 import Layout from "@/components/layout/Layout";
 import Input from "@/components/input/Input";
@@ -27,6 +26,8 @@ type FormValues = {
 };
 
 export default function Login() {
+  const router = useRouter();
+
   const fileTypes = ["JPG", "PNG", "JPEG", "GIF"];
   const [username, setUsername] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
@@ -129,6 +130,8 @@ export default function Login() {
               console.log(data.uploadedImage);
               console.log(JSON.stringify(data.uploadedImage));
               // console.log(data);
+
+              // router.push(`login/${data.name}`);
             })}
             className={`flex flex-col h-full w-max p-12 rounded-2xl shadow-[0px_10px_20px_5px_rgba(0,0,0,0.1)] items-center ${
               showDiv ? "blur-sm" : "blur-none"
@@ -141,7 +144,6 @@ export default function Login() {
 
               <label className="flex justify-center w-full px-[3vw] py-10 transition border-2 border-gray-300 border-inherit border-dashed rounded-xl appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
                 <span className="flex items-center space-x-2">
-                  {/* <Image src={UploadImage} alt="" /> */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="w-6 h-6"
@@ -277,13 +279,7 @@ export default function Login() {
                 type="submit"
                 className="rounded-lg cursor-pointer p-2 bg-darkComponent text-darkText duration-200 hover:shadow-md hover:bg-darkComponentHover"
               >
-                <Link
-                  href={`login/${username}`}
-                  target="_blank"
-                  className="w-full h-full p-2"
-                >
-                  Submit
-                </Link>
+                Submit
               </button>
             </div>
           </form>
