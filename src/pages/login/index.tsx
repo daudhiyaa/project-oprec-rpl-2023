@@ -8,7 +8,6 @@ import { FileUploader } from "react-drag-drop-files";
 import Eye from "public/eye.svg";
 import EyeSlash from "public/eye-slash.svg";
 import Calendar from "public/calendar.svg";
-import X from "public/x.svg";
 
 import Layout from "@/components/layout/Layout";
 import Input from "@/components/input/Input";
@@ -29,7 +28,6 @@ export default function Login() {
   const router = useRouter();
 
   const fileTypes = ["JPG", "PNG", "JPEG", "GIF"];
-  const [username, setUsername] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
   const [showDiv, setShowDiv] = useState(false);
 
@@ -86,34 +84,17 @@ export default function Login() {
   return (
     <Layout pageTitle="Login">
       <section className="min-h-screen w-full bg-lightBG dark:bg-darkBG text-white flex justify-center items-center font-poppins py-32">
-        <div
-          className={`absolute w-[90%] h-full shado-xl shadow-[0px_0px_30px_0px_rgba(0,0,0,0.2)] rounded-[3vw] flex flex-col text-lightText opacity-75 dark:text-white py-7 items-center z-20 dark:bg-darkBG bg-lightBG ${
-            showDiv ? "block" : "hidden"
-          }`}
-        >
-          <div className="flex w-full items-center justify-center">
-            <h1 className="w-[90%] flex justify-center text-2xl">
-              Your Submitted Data
-            </h1>
-            <button
-              onClick={() => {
-                setShowDiv(false);
-              }}
-              className="p-2 text-2xl duration-200 border-transparent border-2 hover:border-gray-200 rounded-lg"
-            >
-              <Image src={X} alt="" />
-            </button>
-          </div>
-          <DivSubmittedData
-            submittedFile={submittedFile}
-            submittedName={submittedName}
-            submittedEmail={submittedEmail}
-            submittedPhoneNumber={submittedPhoneNumber}
-            submittedDateBirth={submittedDateBirth}
-            submittedPassword={submittedPassword}
-            submittedGender={submittedGender}
-          />
-        </div>
+        <DivSubmittedData
+          setShowDiv={setShowDiv}
+          showDiv={showDiv}
+          submittedFile={submittedFile}
+          submittedName={submittedName}
+          submittedEmail={submittedEmail}
+          submittedPhoneNumber={submittedPhoneNumber}
+          submittedDateBirth={submittedDateBirth}
+          submittedPassword={submittedPassword}
+          submittedGender={submittedGender}
+        />
 
         <FormProvider {...methods}>
           <form
@@ -184,8 +165,8 @@ export default function Login() {
                 registerType={{
                   required: "This Name is required!",
                   minLength: {
-                    value: 4,
-                    message: "Minimal 4",
+                    value: 3,
+                    message: "Minimum 3 letters required",
                   },
                 }}
                 placeholder="Name"
@@ -213,9 +194,13 @@ export default function Login() {
                 inputType="tel"
                 registerType={{
                   required: "This Phone Number is required!",
+                  minLength: {
+                    value: 10,
+                    message: "Minimum 10 number required!",
+                  },
                   pattern: {
-                    value: /^[0-9]{4}-[0-9]{4}-[0-9]{4}/i,
-                    message: "Phone Number Not Same with pattern",
+                    value: /^\d+$/i,
+                    message: "Just enter a number",
                   },
                 }}
                 placeholder="Phone Number"
