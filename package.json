@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "minify": "npx tailwindcss -o ./src/styles/globals.css --minify",
+    "test": "jest --config=jest.config.js"
   },
   "dependencies": {
     "@next/font": "13.1.6",
@@ -25,8 +27,13 @@
     "typescript": "4.9.5"
   },
   "devDependencies": {
+    "@types/jest": "^29.4.0",
     "autoprefixer": "^10.4.13",
+    "babel-jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.6"
+    "tailwindcss": "^3.2.6",
+    "ts-jest": "^29.0.5"
   }
 }
