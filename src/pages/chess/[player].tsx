@@ -34,7 +34,6 @@ const Player: NextPage = () => {
   const { player } = router.query;
 
   const [country, setCountry] = useState("");
-  const [isPrem, setIsPrem] = useState(false);
 
   const API_LINK = `https://api.chess.com/pub/player/${player}`;
 
@@ -53,10 +52,6 @@ const Player: NextPage = () => {
         .then((countryData) => setCountry(countryData.name));
     }
   }, [data?.country]);
-
-  useEffect(() => {
-    if (data?.status === "premium") setIsPrem(true);
-  }, [data?.status]);
 
   if (isLoading)
     return (
@@ -83,11 +78,10 @@ const Player: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo-title.png" />
       </Head>
-      <section
-        className="min-h-screen p-24 w-full flex flex-col items-start justify-center dark:text-white dark:bg-darkBG bg-lightBG text-lightText font-poppins"
-        key={data?.player_id}
-      >
-        <h4 className="text-sm">{data?.url}</h4>
+      <section className="min-h-screen p-24 w-full flex flex-col items-start justify-center dark:text-white dark:bg-darkBG bg-lightBG text-lightText font-poppins">
+        <Link href={`${data?.url}`} className="text-sm hover:underline">
+          www.chess.com/member/{data?.username}
+        </Link>
         <span className="text-[3rem] flex gap-3">
           <h2 className="font-thin text-gray-400">#{data?.title}</h2>
           <h2 className="font-bold">{data?.name}</h2>
@@ -95,7 +89,7 @@ const Player: NextPage = () => {
         <span className="flex items-center gap-2 mt-2">
           <h2
             className={`py-2 px-4 flex ${
-              isPrem ? "bg-lightComponent" : "bg-cyan-400"
+              data?.status === "premium" ? "bg-lightComponent" : "bg-cyan-400"
             } rounded-md`}
           >
             {data?.status.toUpperCase()}
@@ -105,9 +99,8 @@ const Player: NextPage = () => {
           </h2>
           <h2
             className={`${
-              country === ""
-                ? ""
-                : "py-2 px-4 flex border-slate-300 border-2 rounded-md"
+              country !== "" &&
+              "py-2 px-4 flex border-slate-300 border-2 rounded-md"
             }`}
           >
             {country}
